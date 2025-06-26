@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h2 class="card-title">财务目标</h2>
+            <a href="{{ url_for('add_goal') }}" class="btn btn-primary">添加目标</a>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>名称</th>
+                            <th>目标金额</th>
+                            <th>当前金额</th>
+                            <th>进度</th>
+                            <th>目标日期</th>
+                            <th>剩余天数</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for goal in goals %}
+                        <tr>
+                            <td>{{ goal.name }}</td>
+                            <td>{{ goal.target_amount }}</td>
+                            <td>{{ goal.current_amount }}</td>
+                            <td>
+                                <div class="progress">
+                                    <div class="progress-bar" style="width: {{ goal.progress() }}%">
+                                        {{ "%.1f"|format(goal.progress()) }}%
+                                    </div>
+                                </div>
+                            </td>
+                            <td>{{ goal.target_date.strftime('%Y-%m-%d') }}</td>
+                            <td>{{ goal.days_remaining() }}</td>
+                            <td>
+                                <a href="#" class="btn btn-sm btn-primary">编辑</a>
+                                <form method="POST" action="#" style="display: inline;">
+                                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('确定删除这个目标吗？')">删除</button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

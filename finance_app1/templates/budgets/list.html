@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h2 class="card-title">预算管理</h2>
+            <a href="{{ url_for('add_budget') }}" class="btn btn-primary">添加预算</a>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>名称</th>
+                            <th>分类</th>
+                            <th>周期</th>
+                            <th>预算金额</th>
+                            <th>已花费</th>
+                            <th>剩余</th>
+                            <th>日期范围</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for budget in budgets %}
+                        <tr>
+                            <td>{{ budget.name }}</td>
+                            <td>{{ budget.category }}</td>
+                            <td>{{ budget.period }}</td>
+                            <td>{{ budget.amount }}</td>
+                            <td>{{ budget.spent_amount() }}</td>
+                            <td class="{% if budget.remaining_amount() < 0 %}text-danger{% endif %}">
+                                {{ budget.remaining_amount() }}
+                            </td>
+                            <td>
+                                {{ budget.start_date.strftime('%Y-%m-%d') }} 至 
+                                {{ budget.end_date.strftime('%Y-%m-%d') }}
+                            </td>
+                            <td>
+                                <a href="#" class="btn btn-sm btn-primary">编辑</a>
+                                <form method="POST" action="#" style="display: inline;">
+                                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('确定删除这个预算吗？')">删除</button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

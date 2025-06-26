@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="card">
+        <div class="card-header">
+            <h2 class="card-title">{{ item.title }}</h2>
+            <span class="badge bg-primary">{{ item.category }}</span>
+        </div>
+        <div class="card-body">
+            {% if item.image %}
+            <img src="{{ url_for('static', filename='uploads/' + item.image) }}" class="img-fluid mb-4" alt="{{ item.title }}">
+            {% endif %}
+            <div class="content">
+                {{ item.content|safe }}
+            </div>
+        </div>
+        <div class="card-footer">
+            <form method="POST" action="{{ url_for('favorite_knowledge', id=item.id) }}">
+                <button type="submit" class="btn {% if is_favorite %}btn-danger{% else %}btn-primary{% endif %}">
+                    {% if is_favorite %}取消收藏{% else %}收藏{% endif %}
+                </button>
+            </form>
+            <small class="text-muted">发布于 {{ item.created_at.strftime('%Y-%m-%d') }}</small>
+        </div>
+    </div>
+</div>
+{% endblock %}

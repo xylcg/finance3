@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="card">
+        <div class="card-header">
+            <h2 class="card-title">{{ title }}</h2>
+        </div>
+        <div class="card-body">
+            <form method="POST">
+                {{ form.hidden_tag() }}
+                <div class="form-group">
+                    {{ form.name.label }}
+                    {{ form.name(class="form-control") }}
+                </div>
+                <div class="form-group">
+                    {{ form.target_amount.label }}
+                    {{ form.target_amount(class="form-control") }}
+                </div>
+                <div class="form-group">
+                    {{ form.current_amount.label }}
+                    {{ form.current_amount(class="form-control") }}
+                </div>
+                <div class="form-group">
+                    {{ form.target_date.label }}
+                    {{ form.target_date(class="form-control") }}
+                </div>
+                <button type="submit" class="btn btn-primary">保存</button>
+                <a href="{{ url_for('goals') }}" class="btn btn-secondary">取消</a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

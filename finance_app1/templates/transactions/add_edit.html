@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="card">
+        <div class="card-header">
+            <h2 class="card-title">{{ title }}</h2>
+        </div>
+        <div class="card-body">
+            <form method="POST">
+                {{ form.hidden_tag() }}
+                <div class="form-group">
+                    {{ form.amount.label }}
+                    {{ form.amount(class="form-control") }}
+                </div>
+                <div class="form-group">
+                    {{ form.description.label }}
+                    {{ form.description(class="form-control") }}
+                </div>
+                <div class="form-group">
+                    {{ form.type.label }}
+                    {{ form.type(class="form-control") }}
+                </div>
+                <div class="form-group">
+                    {{ form.category.label }}
+                    {{ form.category(class="form-control") }}
+                </div>
+                <div class="form-group">
+                    {{ form.date.label }}
+                    {{ form.date(class="form-control") }}
+                </div>
+                <div class="form-group">
+                    {{ form.goal.label }}
+                    {{ form.goal(class="form-control") }}
+                    <small class="form-text text-muted">可选，关联到财务目标</small>
+                </div>
+                <button type="submit" class="btn btn-primary">保存</button>
+                <a href="{{ url_for('transactions') }}" class="btn btn-secondary">取消</a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,133 @@
+{% extends "base.html" %}
+
+{% block title %}首页{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <!-- 最近交易 -->
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">最近交易</h2>
+                    <a href="{{ url_for('transactions') }}" class="btn btn-sm btn-primary">查看全部</a>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>日期</th>
+                                    <th>金额</th>
+                                    <th>类型</th>
+                                    <th>分类</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for transaction in recent_transactions %}
+                                <tr>
+                                    <td>{{ transaction.date.strftime('%m-%d') }}</td>
+                                    <td class="{% if transaction.type == 'income' %}text-success{% else %}text-danger{% endif %}">
+                                        {{ transaction.amount }}
+                                    </td>
+                                    <td>{{ '收入' if transaction.type == 'income' else '支出' }}</td>
+                                    <td>{{ transaction.category }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 预算摘要 -->
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">预算摘要</h2>
+                    <a href="{{ url_for('budgets') }}" class="btn btn-sm btn-primary">查看全部</a>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>名称</th>
+                                    <th>分类</th>
+                                    <th>剩余</th>
+                                    <th>进度</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for budget in active_budgets %}
+                                <tr>
+                                    <td>{{ budget.name }}</td>
+                                    <td>{{ budget.category }}</td>
+                                    <td class="{% if budget.remaining_amount() < 0 %}text-danger{% endif %}">
+                                        {{ budget.remaining_amount() }}
+                                    </td>
+                                    <td>
+                                        <div class="progress" style="height: 20px;">
+                                            <div class="progress-bar {% if budget.remaining_amount() < 0 %}bg-danger{% endif %}" 
+                                                 style="width: {{ (budget.spent_amount() / budget.amount * 100) if budget.amount > 0 else 0 }}%">
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <!-- 目标进度 -->
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">目标进度</h2>
+                    <a href="{{ url_for('goals') }}" class="btn btn-sm btn-primary">查看全部</a>
+                </div>
+                <div class="card-body">
+                    {% for goal in active_goals %}
+                    <div class="mb-3">
+                        <h5>{{ goal.name }}</h5>
+                        <div class="d-flex justify-content-between">
+                            <span>{{ goal.current_amount }} / {{ goal.target_amount }}</span>
+                            <span>{{ "%.1f"|format(goal.progress()) }}%</span>
+                        </div>
+                        <div class="progress">
+                            <div class="progress-bar" style="width: {{ goal.progress() }}%"></div>
+                        </div>
+                        <small class="text-muted">剩余 {{ goal.days_remaining() }} 天</small>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- 推荐理财知识 -->
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">推荐理财知识</h2>
+                    <a href="{{ url_for('knowledge') }}" class="btn btn-sm btn-primary">查看全部</a>
+                </div>
+                <div class="card-body">
+                    {% for item in recommended_knowledge %}
+                    <div class="mb-3">
+                        <h5><a href="{{ url_for('view_knowledge', id=item.id) }}">{{ item.title }}</a></h5>
+                        <p>{{ item.content|truncate(100) }}</p>
+                        <span class="badge bg-primary">{{ item.category }}</span>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

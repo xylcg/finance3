@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="card">
+        <div class="card-header">
+            <h2 class="card-title">统计报表</h2>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="chart-container">
+                        <h4>支出分类统计</h4>
+                        <canvas id="categoryChart"></canvas>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="chart-container">
+                        <h4>月度收支趋势</h4>
+                        <canvas id="monthlyChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    fetch("{{ url_for('reports_data') }}")
+        .then(response => response.json())
+        .then(data => {
+            // 支出分类饼图
+            const categoryCtx = document.getElementById('categoryChart').getContext('2d');
+            new Chart(categoryCtx, {
+                type: 'pie',
+                data: {
+                    labels: data.expense_by_category.categories,
+                    datasets: [{
+                        data: data.expense_by_category.data,
+                        backgroundColor: [
+                            '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', 
+                            '#9966FF', '#FF9F40', '#8AC249', '#EA5F89'
+                        ]
+                    }]
+                }
+            });
+
+            // 月度收支柱状图
+            const monthlyCtx = document.getElementById('monthlyChart').getContext('2d');
+            new Chart(monthlyCtx, {
+                type: 'bar',
+                data: {
+                    labels: data.monthly_data.months,
+                    datasets: [
+                        {
+                            label: '收入',
+                            data: data.monthly_data.income,
+                            backgroundColor: '#36A2EB'
+                        },
+                        {
+                            label: '支出',
+                            data: data.monthly_data.expense,
+                            backgroundColor: '#FF6384'
+                        }
+                    ]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        });
+});
+</script>
+{% endblock %}

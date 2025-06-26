@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="card">
+        <div class="card-header">
+            <h2 class="card-title">{{ title }}</h2>
+        </div>
+        <div class="card-body">
+            <form method="POST">
+                {{ form.hidden_tag() }}
+                <div class="form-group">
+                    {{ form.name.label }}
+                    {{ form.name(class="form-control") }}
+                </div>
+                <div class="form-group">
+                    {{ form.amount.label }}
+                    {{ form.amount(class="form-control") }}
+                </div>
+                <div class="form-group">
+                    {{ form.category.label }}
+                    {{ form.category(class="form-control") }}
+                </div>
+                <div class="form-group">
+                    {{ form.period.label }}
+                    {{ form.period(class="form-control") }}
+                </div>
+                <div class="form-group">
+                    {{ form.start_date.label }}
+                    {{ form.start_date(class="form-control") }}
+                </div>
+                <div class="form-group">
+                    {{ form.end_date.label }}
+                    {{ form.end_date(class="form-control") }}
+                </div>
+                <button type="submit" class="btn btn-primary">保存</button>
+                <a href="{{ url_for('budgets') }}" class="btn btn-secondary">取消</a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
